@@ -1,6 +1,6 @@
 {
   "name": "ninepatch-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Detect, compile and decompile Android nine-patch images: convert .9.png between the raw source format (1px guide borders) and the AAPT-compiled format (npTc/npOl/npLb chunks)",
   "type": "module",
   "license": "ISC",
