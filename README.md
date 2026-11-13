@@ -13,7 +13,8 @@ nine-patches between their two flavors:
 
 The compiled output is **byte-for-byte identical to real AAPT** (both `npTc` and
 `npOl` are verified against real AAPT fixtures in CI), and decompiling fully
-restores the guide borders. 简体中文文档见 [README.zh-CN.md](./README.zh-CN.md)。
+restores the guide borders. Chinese documentation:
+[README.zh-CN.md](./README.zh-CN.md).
 
 ```sh
 $ ninepatch detect btn.9.png btn.png photo.jpg
