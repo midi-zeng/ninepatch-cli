@@ -45,6 +45,7 @@
     "lint": "oxlint src test",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run test",
+    "release": "pnpm run build && bumpp && npm publish",
     "prepublishOnly": "npm run check"
   },
   "packageManager": "pnpm@12.4.2",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@types/node": "^26.6.6",
     "@types/pngjs": "^6.0.5",
+    "bumpp": "^12.3.0",
     "oxlint": "^1.93.0",
     "typescript": "^5.9.0",
     "vitest": "^5.1.0"
