@@ -1,0 +1,63 @@
+{
+  "name": "ninepatch-cli",
+  "version": "1.0.0",
+  "description": "Detect, compile and decompile Android nine-patch images: convert .9.png between the raw source format (1px guide borders) and the AAPT-compiled format (npTc/npOl/npLb chunks)",
+  "type": "module",
+  "license": "ISC",
+  "author": "zengfukun@foxmail.com",
+  "repository": "https://github.com/midi-zeng/ninepatch-cli.git",
+  "keywords": [
+    "ninepatch",
+    "nine-patch",
+    "9-patch",
+    "dot9",
+    "point-nine",
+    "npTc",
+    "aapt",
+    "android",
+    "png",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "ninepatch": "dist/cli.js",
+    "np9": "dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && vitest run",
+    "test:watch": "vitest",
+    "lint": "oxlint src test",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "prepublishOnly": "npm run check"
+  },
+  "packageManager": "pnpm@12.4.2",
+  "dependencies": {
+    "commander": "^14.0.2",
+    "ninepatch-core": "^2.0.0",
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
+    "oxlint": "^1.93.0",
+    "typescript": "^5.9.0",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - ninepatch-core@2.0.0
