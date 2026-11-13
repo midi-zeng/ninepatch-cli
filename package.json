@@ -51,7 +51,7 @@
   "packageManager": "pnpm@12.4.2",
   "dependencies": {
     "commander": "^14.0.2",
-    "ninepatch-core": "^2.0.0",
+    "ninepatch-core": "file:../ninepatch-core",
     "pngjs": "^7.0.0"
   },
   "devDependencies": {

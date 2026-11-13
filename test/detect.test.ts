@@ -4,7 +4,7 @@ import { buildSourcePng, loadFixture } from './helpers'
 
 describe('detectImage', () => {
   it('detects a raw nine-patch source (real fixture)', () => {
-    const detection = detectImage(loadFixture('orgin.png'))
+    const detection = detectImage(loadFixture('origin.png'))
     expect(detection.type).toBe('9patch-source')
     expect(detection.format).toBe('png')
     expect(detection.width).toBe(182)

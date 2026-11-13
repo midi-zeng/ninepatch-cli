@@ -4,9 +4,9 @@ import { buildSourcePng, findChunk, loadFixture, pngChunks } from './helpers'
 
 describe('compileNinePatch', () => {
   it('produces npTc bytes identical to real AAPT output', () => {
-    // The real fixture pair: orgin.png (raw source) + serialized.png
+    // The real fixture pair: origin.png (raw source) + serialized.png
     // (compiled by AAPT). The compiled npTc must be byte-for-byte equal.
-    const result = compile(loadFixture('orgin.png'))
+    const result = compile(loadFixture('origin.png'))
     const realNpTc = findChunk(pngChunks(loadFixture('serialized.png')), 'npTc')!
     const myNpTc = findChunk(pngChunks(result.data), 'npTc')!
     expect(myNpTc.equals(realNpTc)).toBe(true)
@@ -14,7 +14,7 @@ describe('compileNinePatch', () => {
   })
 
   it('produces npOl bytes identical to real AAPT output', () => {
-    const result = compile(loadFixture('orgin.png'))
+    const result = compile(loadFixture('origin.png'))
     const realNpOl = findChunk(pngChunks(loadFixture('serialized.png')), 'npOl')!
     const myNpOl = findChunk(pngChunks(result.data), 'npOl')!
     expect(myNpOl.equals(realNpOl)).toBe(true)
@@ -22,7 +22,7 @@ describe('compileNinePatch', () => {
   })
 
   it('writes chunks in the AAPT order (npOl, npTc right after IHDR)', () => {
-    const result = compile(loadFixture('orgin.png'))
+    const result = compile(loadFixture('origin.png'))
     const names = pngChunks(result.data).map(chunk => chunk.name)
     expect(names.slice(0, 4)).toEqual(['IHDR', 'npOl', 'npTc', 'IDAT'])
   })

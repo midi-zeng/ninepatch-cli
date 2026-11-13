@@ -20,7 +20,7 @@ describe('round trips', () => {
 
   it('decompile(compiled) matches the real source fixture pixel-for-pixel', () => {
     const source = decompile(loadFixture('serialized.png'))
-    const a = decodeRgbaPng(loadFixture('orgin.png'))
+    const a = decodeRgbaPng(loadFixture('origin.png'))
     const b = decodeRgbaPng(source.data)
     expect(b.width).toBe(a.width)
     expect(b.height).toBe(a.height)

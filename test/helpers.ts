@@ -109,7 +109,7 @@ export function findChunk(chunks: RawChunkView[], name: string): Buffer | undefi
 }
 
 /** Load a real fixture from test/images */
-export function loadFixture(name: 'orgin.png' | 'serialized.png'): Uint8Array {
+export function loadFixture(name: 'origin.png' | 'serialized.png'): Uint8Array {
   return new Uint8Array(readFileSync(new URL(`./images/${name}`, import.meta.url)))
 }
 

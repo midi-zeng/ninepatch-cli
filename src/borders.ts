@@ -376,7 +376,7 @@ export class NinePatchError extends Error {
 export function parseSourceNinePatch(pixels: Uint8ClampedArray, width: number, height: number): SourcePatchParse {
   const details: string[] = []
   const warnings: string[] = []
-  const fail = (message: string, pixel?: number, edge?: string): never => {
+  const malformed = (message: string, pixel?: number, edge?: string): never => {
     const at = edge
       ? pixel !== undefined && pixel >= 0
         ? ` Found at pixel #${pixel} along ${edge} edge.`
@@ -387,7 +387,7 @@ export function parseSourceNinePatch(pixels: Uint8ClampedArray, width: number, h
   }
 
   if (width < 3 || height < 3) {
-    fail('Image must be at least 3x3 (1x1 without frame) pixels')
+    malformed('Image must be at least 3x3 (1x1 without frame) pixels')
   }
 
   const corner = 0
@@ -396,47 +396,47 @@ export function parseSourceNinePatch(pixels: Uint8ClampedArray, width: number, h
     !transparent &&
     !(pixels[0] === 255 && pixels[1] === 255 && pixels[2] === 255 && pixels[3] === 255)
   ) {
-    fail('Must have one-pixel frame that is either transparent or white')
+    malformed('Must have one-pixel frame that is either transparent or white')
   }
 
   // Stretch regions (top row / left column; at least one required per axis)
-  const xResult = getHorizontalTicks(pixels, width, 0, transparent, { required: true, multipleAllowed: true })
-  if (xResult.error) fail(xResult.error.message, xResult.error.pixel, 'top')
-  warnings.push(...xResult.warnings)
-  const xDivs = xResult.pairs
+  const topTicks = getHorizontalTicks(pixels, width, 0, transparent, { required: true, multipleAllowed: true })
+  if (topTicks.error) malformed(topTicks.error.message, topTicks.error.pixel, 'top')
+  warnings.push(...topTicks.warnings)
+  const xDivs = topTicks.pairs
 
-  const yResult = getVerticalTicks(pixels, width, height, 0, transparent, { required: true, multipleAllowed: true })
-  if (yResult.error) fail(yResult.error.message, yResult.error.pixel, 'left')
-  warnings.push(...yResult.warnings)
-  const yDivs = yResult.pairs
+  const leftTicks = getVerticalTicks(pixels, width, height, 0, transparent, { required: true, multipleAllowed: true })
+  if (leftTicks.error) malformed(leftTicks.error.message, leftTicks.error.pixel, 'left')
+  warnings.push(...leftTicks.warnings)
+  const yDivs = leftTicks.pairs
 
   // Padding (bottom row / right column; at most one run each)
-  const padXResult = getHorizontalTicks(pixels, width, height - 1, transparent, { required: false, multipleAllowed: false })
-  if (padXResult.error) fail(padXResult.error.message, padXResult.error.pixel, 'bottom')
-  warnings.push(...padXResult.warnings)
-  const padYResult = getVerticalTicks(pixels, width, height, width - 1, transparent, { required: false, multipleAllowed: false })
-  if (padYResult.error) fail(padYResult.error.message, padYResult.error.pixel, 'right')
-  warnings.push(...padYResult.warnings)
+  const bottomTicks = getHorizontalTicks(pixels, width, height - 1, transparent, { required: false, multipleAllowed: false })
+  if (bottomTicks.error) malformed(bottomTicks.error.message, bottomTicks.error.pixel, 'bottom')
+  warnings.push(...bottomTicks.warnings)
+  const rightTicks = getVerticalTicks(pixels, width, height, width - 1, transparent, { required: false, multipleAllowed: false })
+  if (rightTicks.error) malformed(rightTicks.error.message, rightTicks.error.pixel, 'right')
+  warnings.push(...rightTicks.warnings)
 
   // Layout bounds (red markers on the bottom row / right column)
-  const boundsX = getHorizontalLayoutBoundsTicks(pixels, width, height - 1, transparent)
-  const boundsY = getVerticalLayoutBoundsTicks(pixels, width, height, width - 1, transparent)
+  const boundsFromBottom = getHorizontalLayoutBoundsTicks(pixels, width, height - 1, transparent)
+  const boundsFromRight = getVerticalLayoutBoundsTicks(pixels, width, height, width - 1, transparent)
   const layoutBounds: NinePatchLayoutBounds | undefined =
-    boundsX.left !== 0 || boundsX.right !== 0 || boundsY.top !== 0 || boundsY.bottom !== 0
-      ? { left: boundsX.left, top: boundsY.top, right: boundsX.right, bottom: boundsY.bottom }
+    boundsFromBottom.left !== 0 || boundsFromBottom.right !== 0 || boundsFromRight.top !== 0 || boundsFromRight.bottom !== 0
+      ? { left: boundsFromBottom.left, top: boundsFromRight.top, right: boundsFromBottom.right, bottom: boundsFromRight.bottom }
       : undefined
 
   // Outline estimation happens on the full image, before cropping
   const outline = getOutline(pixels, width, height)
 
   // Padding: explicit markers, or inferred from the first stretch region
-  const xRun = padXResult.pairs[0] ?? xDivs[0]!
-  const yRun = padYResult.pairs[0] ?? yDivs[0]!
+  const xPaddingRun = bottomTicks.pairs[0] ?? xDivs[0]!
+  const yPaddingRun = rightTicks.pairs[0] ?? yDivs[0]!
   const padding: NinePatchPadding = {
-    left: xRun.start,
-    right: width - 2 - xRun.stop,
-    top: yRun.start,
-    bottom: height - 2 - yRun.stop
+    left: xPaddingRun.start,
+    right: width - 2 - xPaddingRun.stop,
+    top: yPaddingRun.start,
+    bottom: height - 2 - yPaddingRun.stop
   }
 
   // Strip the 1px frame
@@ -455,7 +455,7 @@ export function parseSourceNinePatch(pixels: Uint8ClampedArray, width: number, h
   const rowBounds = segmentBounds(yDivs, contentHeight)
 
   if (columnBounds.length * rowBounds.length > 0x7f) {
-    fail('Too many rows and columns in 9-patch perimeter')
+    malformed('Too many rows and columns in 9-patch perimeter')
   }
 
   const colors: number[] = []

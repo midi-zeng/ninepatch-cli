@@ -33,12 +33,12 @@ describe('cli', () => {
   it('detect prints a table and json', () => {
     const dir = makeWorkdir()
     try {
-      const result = run(['detect', join(FIXTURES, 'orgin.png'), join(FIXTURES, 'serialized.png')], dir)
+      const result = run(['detect', join(FIXTURES, 'origin.png'), join(FIXTURES, 'serialized.png')], dir)
       expect(result.status).toBe(0)
       expect(result.stdout).toContain('9patch-source')
       expect(result.stdout).toContain('9patch-compiled')
 
-      const json = run(['detect', '--json', join(FIXTURES, 'orgin.png')], dir)
+      const json = run(['detect', '--json', join(FIXTURES, 'origin.png')], dir)
       const parsed = JSON.parse(json.stdout) as Array<{ file: string; type: string; width: number }>
       expect(parsed[0]!.type).toBe('9patch-source')
       expect(parsed[0]!.width).toBe(182)
@@ -69,7 +69,7 @@ describe('cli', () => {
     const dir = makeWorkdir()
     try {
       const source = join(dir, 'btn.9.png')
-      copyFileSync(join(FIXTURES, 'orgin.png'), source)
+      copyFileSync(join(FIXTURES, 'origin.png'), source)
 
       const compiled = run(['compile', 'btn.9.png'], dir)
       expect(compiled.status).toBe(0)
@@ -90,7 +90,7 @@ describe('cli', () => {
   it('compile --stdout writes the same bytes as the file output', () => {
     const dir = makeWorkdir()
     try {
-      const source = join(FIXTURES, 'orgin.png')
+      const source = join(FIXTURES, 'origin.png')
       const toFile = run(['compile', source, '-o', join(dir, 'out.png')], dir)
       expect(toFile.status).toBe(0)
       const piped = execFileSync('node', [CLI, 'compile', source, '--stdout'])
@@ -116,7 +116,7 @@ describe('cli', () => {
   it('rejects -o with multiple inputs (usage error, exit 2)', () => {
     const dir = makeWorkdir()
     try {
-      const result = run(['compile', join(FIXTURES, 'orgin.png'), join(FIXTURES, 'orgin.png'), '-o', 'x.png'], dir)
+      const result = run(['compile', join(FIXTURES, 'origin.png'), join(FIXTURES, 'origin.png'), '-o', 'x.png'], dir)
       expect(result.status).toBe(2)
     } finally {
       rmSync(dir, { recursive: true, force: true })
