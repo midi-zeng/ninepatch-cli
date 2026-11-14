@@ -49,7 +49,7 @@ npm install -D ninepatch-cli      # dev dependency / CI
 npx ninepatch detect a.png        # one-off
 ```
 
-Requires Node.js >= 18.
+Requires Node.js >= 22.12.
 
 ## CLI reference
 

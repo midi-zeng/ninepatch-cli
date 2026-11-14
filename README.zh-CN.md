@@ -40,7 +40,7 @@ npm install -D ninepatch-cli      # 项目依赖 / CI
 npx ninepatch detect a.png        # 免安装试用
 ```
 
-需要 Node.js >= 18。
+需要 Node.js >= 22.12。
 
 ## CLI 参考
 
